@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Validators
 import re
 from django.core.exceptions import ValidationError
@@ -20,6 +20,8 @@ class Site(models.Model):
 	phone=models.CharField(max_length=250, blank=True, null=True, default=None, verbose_name="Telefono")
 	webSite=models.CharField(max_length=500, blank=True, null=True, default=None, verbose_name="Sitio Web")
 	image=models.ImageField(upload_to="sites", blank=True, null=True, default=None, verbose_name="Imagen")
+	User=models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Usuario")
+
 
 	def __str__(self):
 		return self.name

@@ -4,15 +4,33 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.template import loader
 
+from django.contrib.auth.decorators import login_required
 
-def Index(request):
-	ctx={}
-	template = loader.get_template('sites/index.html')
+from sites.models import Site
+from products.models import SiteProduct
 
-	return HttpResponse(template.render(ctx, request))
+@login_required(login_url='domain:login')
+def misProductos(request):
+	ctx={"productos":{}}
+	user_id = request.user
+	try:
+		sitio=Site.objects.get(User_id=user_id)#verify is a site
+	except:
+		return redirect("domain:index")
+
+
+	if(request.method == "POST"):
+		value_btn = request.POST.get('btn_value')
+		if (value_btn == "deleteProducto"):
+			producto_id = request.POST.get('producto')
+			producto=SiteProduct.objects.get(site=sitio, product_id=producto_id)
+			producto.delete()
+
+
+
+
+	productos= SiteProduct.objects.filter(site=sitio)
+	ctx["productos"]=productos
+	template = loader.get_template('sites/control.html')
 	
-def Logout(request):
-	if request.user is not None:
-
-		logout(request)
-	return redirect('index')
+	return HttpResponse(template.render(ctx, request))

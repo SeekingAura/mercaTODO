@@ -1,0 +1,67 @@
+{% load staticfiles %}
+<!---- https://datatables.net/examples/styling/bootstrap --->
+{% block title %}<title>Merca TODO - Productos</title>{% endblock title %}
+{% block link %}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="{% static 'css/products/dataTables.bootstrap.min.css' %}" rel="stylesheet">
+{% endblock link %}
+{% block urlsNav %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'domain:index' %}">Principal</a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'products:listProducts' %}">Productos 
+            <span class="sr-only">(current)</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'domain:login' %}">Autenticarse
+        </a>
+    </li>
+{% endblock urlsNav %}
+
+{% block content %}
+<table id="example" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Unidades</th>
+            <th>Precio</th>
+            <th>Establecimiento</th>
+            <th>Lugar</th>
+            <th>Última actualziación</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for producto in productos %}
+        <tr>
+            <td><img class="align-self-center mr-3" src="{{producto.image}}" height="120"></td>
+            <td>{{producto.product.name}}</td>
+            <td>{{producto.product.unit}}</td>
+            <td>{{producto.price}}</td>
+            <td>{{producto.site.name}}</td>
+            <td>{{producto.site.address}}</td>
+            <td>{{producto.lastUpdate}}</td>
+        </tr>
+        {% endfor %}
+    <tfoot>
+        <tr>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Unidades</th>
+            <th>Precio</th>
+            <th>Establecimiento</th>
+            <th>Lugar</th>
+            <th>Última actualziación</th>
+        </tr>
+    </tfoot>
+</table>
+{% endblock content %}
+{% block scripts %}
+	<!-- Bootstrap core JavaScript -->
+	<script type="application/javascript" src="{% static 'js/products/jquery-3.3.1.js' %}"></script>
+    <script type="application/javascript" src="{% static 'js/products/jquery.dataTables.min.js' %}"></script>
+    <script type="application/javascript" src="{% static 'js/products/dataTables.bootstrap.min.js' %}"></script>
+    <script type="application/javascript" src="{% static 'js/products/lista Productos.js' %}"></script>
+{% endblock scripts %}

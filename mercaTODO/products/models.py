@@ -6,10 +6,10 @@ from sites.models import Site
 
 # other data
 typeUnit=(
-	('unit', 'Unidad'),
-	('gram','Gramo'),
-	('pound','Libra'),
-	('kilogram' ,'Kilogramo'),
+	('Unidad', 'Unidad'),
+	('Gramo','Gramo'),
+	('Libra','Libra'),
+	('Kilogramo' ,'Kilogramo'),
 	)
 
 
@@ -27,5 +27,6 @@ class SiteProduct(models.Model):
 	site=models.ForeignKey(Site, on_delete=models.CASCADE, verbose_name="Sitio de Venta")
 	product=models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Producto")
 	price = models.FloatField(default=0.0, verbose_name="Precio por Unidad de venta")
+	lastUpdate=models.DateTimeField(auto_now_add=True)
 	def __str__(self):
 		return str(self.site)+str(self.product)

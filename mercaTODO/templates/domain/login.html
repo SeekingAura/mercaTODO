@@ -1,0 +1,86 @@
+{% extends "base/base.html" %}
+{% load staticfiles %}
+
+{% block title %}Merca TODO - Login{% endblock title %}
+{% block link %}
+<link href="{% static 'bootstrap/4.1.1/css/bootstrap.min.css' %}" rel="stylesheet" id="bootstrap-css">
+<script src="{% static 'bootstrap/4.1.1/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/domain/jquery.min.js' %}"></script>
+<link href="{% static 'css/domain/login/login.css' %}" rel="stylesheet">
+{% endblock link %}
+{% block urlsNav %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'domain:index' %}">Principal
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'products:listProducts' %}">Productos </a>
+    </li>
+    <li class="nav-item active">
+		<a class="nav-link" href="{% url 'domain:login' %}">Autenticarse
+			<span class="sr-only">(current)</span>	
+		</a>
+	</li>
+	
+{% endblock urlsNav %}
+
+{% block content %}
+    <div class="container login-container">
+        <div class="row">
+            <div class="col-md-6 login-form-1">
+                <h3>Acceder como comprador</h3>
+                <form method = 'POST'>{% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Your Email *" name="usernameComprador" required/>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="Your Password *" name="password" required/>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btnSubmit" value="Login" />
+                    </div>
+                    <div class="form-group">
+                        <a href="#" class="ForgetPwd">¿Olvidaste tu contraseña?</a>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6 login-form-2">
+                <h3>Acceder como Proveedor</h3>
+                <form method = 'POST'>{% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Your Email *" name="usernameSitio" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="Your Password *" name="password" required />
+                    </div>
+                    {% if error.0 %}
+                        {% if error.2 == "Sitio" %}
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                {{error.1}}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                        {% endif %}
+
+
+                    {% endif %}
+                    <div class="form-group">
+                        <input type="submit" class="btnSubmit" value="Login" />
+                    </div>
+                    <div class="form-group">
+
+                        <a href="#" class="ForgetPwd" value="Login">¿Olvidaste tu contraseña?</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block scripts %}
+	<!-- Bootstrap core JavaScript -->
+	<script src="{% static 'js/domain/login/jquery-3.3.1.slim.min.js' %}" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="{% static 'js/domain/login/popper.min.js' %}" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="{% static 'js/domain/login/bootstrap.min.js' %}" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+{% endblock scripts %}
