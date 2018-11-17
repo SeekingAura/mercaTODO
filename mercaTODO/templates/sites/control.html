@@ -1,9 +1,11 @@
 {% load staticfiles %}
 <!---- https://datatables.net/examples/styling/bootstrap --->
-{% block title %}<title>Merca TODO - Productos</title>{% endblock title %}
+{% block title %}<title>Merca TODO - Mis Productos</title>{% endblock title %}
 {% block link %}
+
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <link href="{% static 'css/products/dataTables.bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/products/alert.css' %}" rel="stylesheet">
 {% endblock link %}
 {% block urlsNav %}
     <li class="nav-item">
@@ -20,43 +22,86 @@
     </li>
 {% endblock urlsNav %}
 
-{% block content %}
-<table id="example" class="table table-striped table-bordered" style="width:100%">
-    <thead>
-        <tr>
-            <th>Imagen</th>
-            <th>Nombre</th>
-            <th>Unidades</th>
-            <th>Precio</th>
-            <th>Última actualziación</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for producto in productos %}
-        <tr>
-            
-            <td><img class="align-self-center mr-3" src="{{producto.image}}" height="120"></td>
-            <td>{{producto.product.name}}</td>
-            <td>{{producto.product.unit}}</td>
-            <td>$ {{producto.price}}</td>
-            <td>{{producto.lastUpdate}}</td>
-            <td>
-                <form method="POST">{% csrf_token %}
-                <input name="producto" value="{{producto.product_id}}" hidden>
-                <button type="submit" class="btn btn-danger" value="deleteProducto" name="btn_value">Eliminar</button>
-            </td>
-        </tr>
-        {% endfor %}
+{% if error.0 %}
+<div class="alert">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+    {{error.1}}
+  </div>
+{% endif %}
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="fileProducts" required>
+    <button type="submit" class="btn btn-primary" value="fileAdd" name="btn_value">Subir archivo</button>
+</form>
+    <div>
+    <form method="POST">{% csrf_token %}
+        {% if nuevos %}
+        <button type="submit" class="btn btn-primary" value="addProducto" name="btn_value">Aceptar Nuevos</button>
+        <button type="submit" class="btn btn-danger" value="addProductoCancel" name="btn_value">Rechazar nuevos</button>
+        {% endif %}
+        {% if modificados %}
+        <button type="submit" class="btn btn-primary" value="modProducto" name="btn_value">Aceptar Modificaciones</button>
+        <button type="submit" class="btn btn-danger" value="modProductoCancel" name="btn_value">Rechazar Modificaciones</button>
+        {% endif %}
+    </form>
+    </div>
+        {% block content %}
+        <table id="example" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Unidades</th>
+                    <th>Precio</th>
+                    <th>Última actualización</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% for producto in productos %}
+                <tr>
+                    
+                    <td><img class="align-self-center mr-3" src="{{producto.image}}" height="100"></td>
+                    <td>{{producto.product.name}}</td>
+                    <td>{{producto.product.unit}}</td>
+                    <td>{% if producto.status == "Modificado" %}
+                            <s>$ {{producto.price}}</s>
+                            <b>$ {{producto.newPrice}}</b>
+                        {% else %}
+                        $ {{producto.price}}
+                        {% endif %}
+                    </td>
+                    <td>{{producto.lastUpdate}}</td>
+                    <td>
+                        {% if producto.status != "Sin cambios" %}
+                            <u>{{producto.status}}</u>
+                            <input name="productoChanged" value="[{{producto.product_id}}, {{producto.price}}]" hidden>
+                        {% else %}
+                            {{producto.status}}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="POST">{% csrf_token %}
+                        <input name="producto" value="{{producto.product_id}}" hidden>
+                        <button type="submit" class="btn btn-danger" value="deleteProducto" name="btn_value">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
     <tfoot>
         <th>Imagen</th>
         <th>Nombre</th>
         <th>Unidades</th>
         <th>Precio</th>
-        <th>Última actualziación</th>
+        <th>Última actualización</th>
+        <th>Estado</th>
         <th>Acciones</th>
     </tfoot>
 </table>
+
 {% endblock content %}
 {% block scripts %}
 	<!-- Bootstrap core JavaScript -->
@@ -64,4 +109,6 @@
     <script type="application/javascript" src="{% static 'js/products/jquery.dataTables.min.js' %}"></script>
     <script type="application/javascript" src="{% static 'js/products/dataTables.bootstrap.min.js' %}"></script>
     <script type="application/javascript" src="{% static 'js/products/lista Productos.js' %}"></script>
+
+    
 {% endblock scripts %}

@@ -4,14 +4,14 @@ from .models import *
 # Register your models here.
 
 typeUnitDict={
-	'unit':'Unidad',
-	'gram':'Gramo',
-	'pound':'Libra',
-	'kilogram':'Kilogramo',
+	'Unidad':'Unidad',
+	'Gramo':'Gramo',
+	'Libra':'Libra',
+	'Kilogramo':'Kilogramo',
 }
 class ProductSiteAdmin(ModelAdmin):
-    search_fields = ('site', 'product')
-    list_display = ('site', 'product', 'Unidad_de_venta','price')
+    search_fields = ('site', 'product', 'Unidad_de_venta')
+    list_display = ('site', 'product', 'Unidad_de_venta','price', 'status', 'lastUpdate')
     def Unidad_de_venta(self, obj):
         return typeUnitDict.get(obj.product.unit)
 admin.site.register(Product)
